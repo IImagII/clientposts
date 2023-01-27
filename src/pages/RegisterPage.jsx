@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { registerUser } from '../redux/features/auth/authSlice'
 
 export const RegisterPage = () => {
+   const [username, setUserName] = useState('') //делаем управляемые input
+   const [password, setPassword] = useState('') //делаем управляемые input
+   const dispatch = useDispatch()
+
+   //создаем функцию для отправки данных на бекенд
+   const handleSubmit = () => {
+      try {
+         dispatch(registerUser({ username, password })) //обязательно передаем объект с параметрами как мы и писали в thunk
+         //очищаем наши формы
+         setUserName('')
+         setPassword('')
+      } catch (err) {
+         console.log(err)
+      }
+   }
+
    return (
       <form
          onSubmit={e => e.preventDefault()}
@@ -12,6 +30,8 @@ export const RegisterPage = () => {
             Username:
             <input
                type='text'
+               value={username}
+               onChange={e => setUserName(e.target.value)}
                placeholder='Username'
                className='mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700'
             />
@@ -20,7 +40,9 @@ export const RegisterPage = () => {
             Password:
             <input
                type='password'
+               value={password}
                placeholder='Password'
+               onChange={e => setPassword(e.target.value)}
                className='mt-1 text-black w-full rounded-lg bg-gray-400 border py-1 px-2 text-xs outline-none placeholder:text-gray-700'
             />
          </label>
@@ -28,6 +50,7 @@ export const RegisterPage = () => {
             <button
                className='flex justify-center items-center text-xs bg-gray-600 text-white rounded-sm py-2 px-4'
                type='submit'
+               onClick={handleSubmit} //так отправляем форму
             >
                Подтвердить
             </button>

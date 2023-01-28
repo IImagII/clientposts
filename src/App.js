@@ -5,6 +5,8 @@ import { PostPage } from './pages/PostPage'
 import { AddPostPages } from './pages/AddPostPages'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css' //это стили для вывода ошибок
 
 import { Route, Routes } from 'react-router-dom'
 
@@ -19,6 +21,8 @@ function App() {
             <Route path='login' element={<LoginPage />} />
             <Route path='register' element={<RegisterPage />} />
          </Routes>
+         {/* для отображения ошибок */}
+         <ToastContainer position='bottom-right' />
       </Layout>
    )
 }

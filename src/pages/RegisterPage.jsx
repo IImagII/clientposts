@@ -1,12 +1,23 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { registerUser } from '../redux/features/auth/authSlice'
+import { toast } from 'react-toastify'
+import { useEffect } from 'react'
 
 export const RegisterPage = () => {
    const [username, setUserName] = useState('') //делаем управляемые input
    const [password, setPassword] = useState('') //делаем управляемые input
    const dispatch = useDispatch()
+
+   const { status } = useSelector(state => state.auth)
+
+   //это делается для обработки ошибок мы получили status
+   useEffect(() => {
+      if (status) {
+         toast(status)
+      }
+   }, [status])
 
    //создаем функцию для отправки данных на бекенд
    const handleSubmit = () => {

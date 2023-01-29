@@ -9,8 +9,17 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css' //это стили для вывода ошибок
 
 import { Route, Routes } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { getMe } from './redux/features/auth/authSlice'
 
 function App() {
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      dispatch(getMe())
+   }, [])
+
    return (
       <Layout>
          <Routes>

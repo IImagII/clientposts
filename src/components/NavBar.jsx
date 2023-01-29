@@ -1,8 +1,20 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
+import { checkIsAuth, logout } from '../redux/features/auth/authSlice'
+import { toast } from 'react-toastify'
 
 export const NavBar = () => {
-   const isAuth = false
+   const isAuth = useSelector(checkIsAuth)
+   const dispatch = useDispatch()
+
+   //это мы делаем функцию по выходу и очистки token берем из файла authSlice.js
+   const logOutHandler = () => {
+      dispatch(logout()) //обнуляем наше состояние
+      //очищаем наш localStorage
+      window.localStorage.removeItem('token')
+      toast('Вы вышли из системы')
+   }
 
    const activeStyles = {
       color: 'white',
@@ -50,7 +62,11 @@ export const NavBar = () => {
             </ul>
          )}
          <div className='flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm px-4 py-2'>
-            {isAuth ? <button>Выйти</button> : <Link to={'/login'}>Войти</Link>}
+            {isAuth ? (
+               <button onClick={logOutHandler}>Выйти</button>
+            ) : (
+               <Link to={'/login'}>Войти</Link>
+            )}
          </div>
       </div>
    )

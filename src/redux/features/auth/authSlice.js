@@ -48,11 +48,31 @@ export const loginUser = createAsyncThunk(
       }
    }
 )
+export const getMe = createAsyncThunk(
+   //auth-берется из nane registerUser - берется из названия функции
+   'auth/getMe',
+   async () => {
+      try {
+         //внимание мы тут импортируем не просто axios а уже модифицированную нами его версию свмотри выше
+         const { data } = await axios.get('/auth/me')
+         return data
+      } catch (err) {
+         console.log('err', err)
+      }
+   }
+)
 
 export const authSlice = createSlice({
    name: 'auth',
    initialState,
-   reducers: {},
+   reducers: {
+      logout: state => {
+         state.user = null
+         state.token = null
+         state.isLoading = false
+         state.status = null
+      },
+   },
    extraReducers: {
       // Register user
       [registerUser.pending]: state => {
@@ -92,7 +112,27 @@ export const authSlice = createSlice({
          state.status = action.payload.message
          state.isLoading = false
       },
+      //get Me (проверка авторизации)
+      [getMe.pending]: state => {
+         state.isLoading = true
+         state.status = null
+      },
+      [getMe.fulfilled]: (state, action) => {
+         state.isLoading = false
+         state.status = null
+         //мы поставили ?  то есть в user мы добавляем в том случае если он есть
+         state.user = action.payload?.user
+         //это тоже что берется из бекенда тот токен который приходит и тоже ставиться ? то есть если он есть мы его тогда записываем
+         state.token = action.payload?.token
+      },
+      [getMe.rejected]: (state, action) => {
+         // мы тут указываем message так как на бекенде именно в этой переменной мы записывали какие то сообщения смотреть файл auth.js  (return res.status(400).json({ message: 'Произошла ошибка', errors }))
+         state.status = action.payload.message
+         state.isLoading = false
+      },
    },
 })
 
+export const checkIsAuth = state => Boolean(state.auth.token) //'то переменная в которую записывается true ил false то есть если у нас токен имеется то нам выдатся соответственно truer
+export const { logout } = authSlice.actions
 export default authSlice.reducer

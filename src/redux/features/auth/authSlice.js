@@ -7,7 +7,7 @@ const initialState = {
    isLoading: false,
    status: null,
 }
-
+// запрос на регистрацию
 export const registerUser = createAsyncThunk(
    //auth-берется из nane registerUser - берется из названия функции
    'auth/registerUser',
@@ -28,6 +28,7 @@ export const registerUser = createAsyncThunk(
       }
    }
 )
+// запросна авторизацию
 export const loginUser = createAsyncThunk(
    //auth-берется из nane registerUser - берется из названия функции
    'auth/loginUser',
@@ -48,6 +49,7 @@ export const loginUser = createAsyncThunk(
       }
    }
 )
+//запрос на получение профиля постов
 export const getMe = createAsyncThunk(
    //auth-берется из nane registerUser - берется из названия функции
    'auth/getMe',

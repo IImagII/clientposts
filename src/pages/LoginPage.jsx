@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { loginUser } from '../redux/features/auth/authSlice'
+import { checkIsAuth, loginUser } from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 
 export const LoginPage = () => {
    const [username, setUserName] = useState('') //делаем управляемые input
    const [password, setPassword] = useState('') //делаем управляемые input
    const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const isAuth = useSelector(checkIsAuth)
 
    const { status } = useSelector(state => state.auth)
 
@@ -15,8 +17,11 @@ export const LoginPage = () => {
    useEffect(() => {
       if (status) {
          toast(status)
+         if (isAuth) {
+            navigate('/')
+         }
       }
-   }, [status])
+   }, [status, navigate, isAuth])
 
    //создаем функцию которая делат запрос на авторизацию
 

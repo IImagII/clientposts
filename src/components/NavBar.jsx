@@ -1,12 +1,13 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { checkIsAuth, logout } from '../redux/features/auth/authSlice'
 import { toast } from 'react-toastify'
 
 export const NavBar = () => {
    const isAuth = useSelector(checkIsAuth)
    const dispatch = useDispatch()
+   const navigate = useNavigate()
 
    //это мы делаем функцию по выходу и очистки token берем из файла authSlice.js
    const logOutHandler = () => {
@@ -14,8 +15,10 @@ export const NavBar = () => {
       //очищаем наш localStorage
       window.localStorage.removeItem('token')
       toast('Вы вышли из системы')
+      navigate('/')
    }
 
+   //это мы делаем подсветку активных ссылок
    const activeStyles = {
       color: 'white',
    }

@@ -1,5 +1,81 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createPost } from '../redux/features/post/postSlice'
 
 export const AddPostPages = () => {
-   return <div></div>
+   const [title, setTitle] = useState('') // делаем управляемый input
+   const [textArea, setTextArea] = useState('') // делаем управляемый input
+   const [image, setImage] = useState('') // делаем управляемый input image
+   const dispatch = useDispatch()
+
+   //создаем функцию по отправки постов на сервер
+   const handleSubmit = () => {
+      try {
+         // формируем для нашего поста форму для отправки
+         const data = new FormData()
+         // добавляем в обьект
+         data.append('title', title)
+         data.append('textArea', textArea)
+         data.append('image', image)
+
+         //обязательно передаем объект с параметрами как мы и писали в thunk
+         dispatch(createPost(data))
+      } catch (err) {
+         console.log(err)
+      }
+   }
+
+   //создаем функцию по оичстке формы
+   const deleteHandler = () => {
+      setTitle('')
+      setTextArea('')
+      setImage('')
+   }
+
+   return (
+      <form className='w-1/3 mx-auto py-10' onSubmit={e => e.preventDefault()}>
+         <label className='text-gray-300 py-2 bg-gray-600 text-xs mt-2 flex items-center justify-center border-2 border-dotted cursor-pointer'>
+            Прикрепить изображение
+            <input
+               type='file'
+               className='hidden'
+               onChange={e => setImage(e.target.files[0])}
+            />
+         </label>
+         <div className='flex object-cover py-2'>IMAGE</div>
+         <label className='text-xs text-white opacity-70'>
+            Заголовок поста:
+            <input
+               type='text'
+               placeholder='Заголовок'
+               value={title}
+               onChange={e => setTitle(e.target.value)}
+               className='mt-1 text-black w-full rounded-lg bg-gray-400 py-1 px-2 text-xs outline-none placeholder:text-gray-700'
+            />
+         </label>
+         <label className='text-xs text-white opacity-70'>
+            Текст поста:
+            <textarea
+               placeholder='Текст поста'
+               value={textArea}
+               onChange={e => setTextArea(e.target.value)}
+               className='mt-1 text-black w-full rounded-lg bg-gray-400 py-1 px-2 text-xs outline-none resize-none h-40 placeholder:text-gray-700'
+            />
+         </label>
+         <div className='flex gap-8 items-center justify-center mt-4'>
+            <button
+               onClick={handleSubmit}
+               className='flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4'
+            >
+               Добавить пост
+            </button>
+            <button
+               onClick={deleteHandler}
+               className='flex justify-center items-center bg-red-600 text-xs text-white rounded-sm py-2 px-4'
+            >
+               Отменить
+            </button>
+         </div>
+      </form>
+   )
 }

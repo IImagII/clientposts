@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createPost } from '../redux/features/post/postSlice'
+import { useNavigate } from 'react-router-dom'
 
 export const AddPostPages = () => {
    const [title, setTitle] = useState('') // делаем управляемый input
-   const [textArea, setTextArea] = useState('') // делаем управляемый input
+   const [text, setText] = useState('') // делаем управляемый input
    const [image, setImage] = useState('') // делаем управляемый input image
    const dispatch = useDispatch()
+   const navigate = useNavigate()
 
    //создаем функцию по отправки постов на сервер
    const handleSubmit = () => {
@@ -15,11 +17,12 @@ export const AddPostPages = () => {
          const data = new FormData()
          // добавляем в обьект
          data.append('title', title)
-         data.append('textArea', textArea)
+         data.append('text', text)
          data.append('image', image)
 
          //обязательно передаем объект с параметрами как мы и писали в thunk
          dispatch(createPost(data))
+         navigate('/')
       } catch (err) {
          console.log(err)
       }
@@ -28,7 +31,7 @@ export const AddPostPages = () => {
    //создаем функцию по оичстке формы
    const deleteHandler = () => {
       setTitle('')
-      setTextArea('')
+      setText('')
       setImage('')
    }
 
@@ -42,7 +45,10 @@ export const AddPostPages = () => {
                onChange={e => setImage(e.target.files[0])}
             />
          </label>
-         <div className='flex object-cover py-2'>IMAGE</div>
+         <div className='flex object-cover py-2'>
+             {/* делаем что при выборе картинки у нас она отображалась в приложении */}
+            {image && <img src={URL.createObjectURL(image)} alt={image.name} />}
+         </div>
          <label className='text-xs text-white opacity-70'>
             Заголовок поста:
             <input
@@ -57,8 +63,8 @@ export const AddPostPages = () => {
             Текст поста:
             <textarea
                placeholder='Текст поста'
-               value={textArea}
-               onChange={e => setTextArea(e.target.value)}
+               value={text}
+               onChange={e => setText(e.target.value)}
                className='mt-1 text-black w-full rounded-lg bg-gray-400 py-1 px-2 text-xs outline-none resize-none h-40 placeholder:text-gray-700'
             />
          </label>

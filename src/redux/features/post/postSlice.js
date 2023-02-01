@@ -21,6 +21,15 @@ export const createPost = createAsyncThunk(
       }
    }
 )
+//запрос на получение всех постов
+export const getAllPosts = createAsyncThunk('post/getAllPosts', async () => {
+   try {
+      const { data } = await axios.get('/posts')
+      return data
+   } catch (err) {
+      console.log('err', err)
+   }
+})
 
 export const postSlice = createSlice({
    name: 'post',
@@ -36,6 +45,18 @@ export const postSlice = createSlice({
          state.posts.push(action.payload) // делаем так потомучто массив у нас будет просто пост поэтому целиком добавляем его через action.payload
       },
       [createPost.rejected]: state => {
+         state.loading = false
+      },
+      //Получение постов
+      [getAllPosts.pending]: state => {
+         state.loading = true
+      },
+      [getAllPosts.fulfilled]: (state, action) => {
+         state.loading = false
+         state.posts = action.payload.posts //тут вставляем то что мы получаем из бекенда posts
+         state.popularPosts = action.payload.popularPosts //тут вставляем то что мы получаем из бекенда popularPosts
+      },
+      [getAllPosts.rejected]: state => {
          state.loading = false
       },
    },

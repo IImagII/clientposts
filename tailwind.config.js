@@ -14,3 +14,5 @@ module.exports = {
    },
    plugins: [],
 }
+
+//['./src/**/*.{js,jsx,ts,tsx}']

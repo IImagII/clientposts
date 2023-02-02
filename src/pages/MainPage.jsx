@@ -31,7 +31,7 @@ export const MainPage = () => {
             </div>
             <div className='basis-1/5'>
                <div className='te(xt-xs uppercase text-white'>Популярные :</div>
-               {popularPosts?.map((post, idx) => (
+               {popularPosts?.map(post => (
                   <PopularPosts key={post._id} post={post} />
                ))}
             </div>

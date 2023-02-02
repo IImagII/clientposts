@@ -1,7 +1,7 @@
 import { Layout } from './components/Layout'
 import { MainPage } from './pages/MainPage'
 import { PostsPage } from './pages/PostsPage'
-import { PostPage } from './pages/PostPage'
+import { PostPage } from './pages/PostPage/PostPage'
 import { AddPostPages } from './pages/AddPostPages'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
@@ -18,7 +18,7 @@ function App() {
 
    useEffect(() => {
       dispatch(getMe())
-   }, [])
+   }, [dispatch])
 
    return (
       <Layout>

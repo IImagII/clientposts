@@ -1,0 +1,15 @@
+.page {
+   @apply flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4;
+}
+.all {
+   @apply flex gap-10 py-8;
+}
+.comment {
+   @apply w-2/3;
+}
+.comment_1 {
+   @apply w-1/3;
+}
+.post {
+   @apply flex flex-col basis-1/4 flex-grow;
+}

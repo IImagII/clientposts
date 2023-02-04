@@ -7,7 +7,7 @@ const initialState = {
    loading: false,
 }
 
-// запрос на отправку постов
+// запрос на создание постов
 export const createPost = createAsyncThunk(
    //post-берется из nane addPost - берется из названия функции
    'post/createPost',
@@ -40,6 +40,19 @@ export const removePost = createAsyncThunk('post/removePost', async id => {
       console.log('err', err)
    }
 })
+
+//запрос на Редактирование поста
+export const updatePost = createAsyncThunk(
+   'post/updatePost',
+   async updatePost => {
+      try {
+         const { data } = await axios.put(`/posts/${updatePost.id}`, updatePost)
+         return data
+      } catch (err) {
+         console.log('err', err)
+      }
+   }
+)
 
 export const postSlice = createSlice({
    name: 'post',
@@ -82,6 +95,23 @@ export const postSlice = createSlice({
          ) //удаляем через фильтр соответственно
       },
       [removePost.rejected]: state => {
+         state.loading = false
+      },
+
+      // Редактироввание поста
+      [updatePost.pending]: state => {
+         state.loading = true
+      },
+      [updatePost.fulfilled]: (state, action) => {
+         state.loading = false
+         // мы находим index именно нашего конкретного поста
+         const index = state.posts.findIndex(
+            post => post._id === action.payload._id
+         )
+         // и теперь имея index мы находим тот пост по нему и помещаем новые данные
+         state.posts[index] = action.payload
+      },
+      [updatePost.rejected]: state => {
          state.loading = false
       },
    },

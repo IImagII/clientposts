@@ -9,7 +9,7 @@ import {
 } from 'react-icons/ai'
 import { useCallback } from 'react'
 import axios from '../../utils/axios'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -28,7 +28,7 @@ export const PostPage = () => {
    const fetchPost = useCallback(async () => {
       const { data } = await axios.get(`/posts/${params.id}`)
       setPost(data)
-   }, [params])
+   }, [params.id])
 
    useEffect(() => {
       fetchPost()
@@ -105,7 +105,9 @@ export const PostPage = () => {
                      {user?._id === post.author && (
                         <div className='flex gap-3 mt-4'>
                            <button className='flex items-center justify-center  text-white opacity-50 mr-2'>
-                              <AiTwotoneEdit style={{ fontSize: 20 }} />
+                              <Link to={`/${params.id}/edit`}>
+                                 <AiTwotoneEdit style={{ fontSize: 20 }} />
+                              </Link>
                            </button>
                            <button
                               onClick={handlerRemovePost}

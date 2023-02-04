@@ -15,11 +15,20 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removePost } from '../../redux/features/post/postSlice'
 import { toast } from 'react-toastify'
+import {
+   createComment,
+   getCommentPost,
+} from '../../redux/features/comment/commentSlice'
+import { CommentItem } from '../../components/CommentItem'
 
 export const PostPage = () => {
-   const [post, setPost] = useState(null)
+   const [post, setPost] = useState(null) // состояние для постов
+   const [comment, setComment] = useState('') // состояние для коментариев
 
    const { user } = useSelector(state => state.auth) //достаем нашего пользователя
+   const { comments } = useSelector(state => state.comment) // достаем наши коментарии
+
+   // console.log(comments)
    const params = useParams() //для порлучения параметров
    const navigate = useNavigate()
    const dispatch = useDispatch()
@@ -29,19 +38,6 @@ export const PostPage = () => {
       const { data } = await axios.get(`/posts/${params.id}`)
       setPost(data)
    }, [params.id])
-
-   useEffect(() => {
-      fetchPost()
-   }, [fetchPost])
-
-   //проверка на налчиие постов чтобы не было ошибки
-   if (!post) {
-      return (
-         <div className='text-xs text-center text-white py-10'>
-            Загрузка.....
-         </div>
-      )
-   }
 
    //удаление конкретного поста
    const handlerRemovePost = () => {
@@ -54,6 +50,45 @@ export const PostPage = () => {
       }
    }
 
+   //функция создания коментария в посте
+   const handleSubmit = () => {
+      try {
+         const postId = params.id
+         dispatch(createComment({ postId, comment }))
+         setComment('')
+         toast('Комментарий создан')
+      } catch (err) {
+         console.log(err)
+      }
+   }
+
+   // создам функцию по загрузке коменатриев
+   const fetchComments = useCallback(async () => {
+      try {
+         dispatch(getCommentPost(params.id))
+      } catch (err) {
+         console.log('err', err)
+      }
+   }, [params.id, dispatch])
+
+   //запрос и вывод постов
+   useEffect(() => {
+      fetchPost() // получаем и выводим наши пост
+   }, [fetchPost])
+
+   //запрос и вывод коментариев к посту
+   useEffect(() => {
+      fetchComments() // получаем и выводим наши коментарии
+   }, [fetchComments])
+
+   //проверка на налчиие постов чтобы не было ошибки
+   if (!post) {
+      return (
+         <div className='text-xs text-center text-white py-10'>
+            Загрузка.....
+         </div>
+      )
+   }
    return (
       <div>
          <button className={style.page} onClick={() => navigate('/')}>
@@ -120,7 +155,27 @@ export const PostPage = () => {
                   </div>
                </div>
             </div>
-            <div className={style.comment_1}>Commentes</div>
+            <div className={style.comment_1}>
+               <form className='flex gap-2' onSubmit={e => e.preventDefault()}>
+                  <input
+                     type='text'
+                     placeholder='Comment'
+                     value={comment}
+                     onChange={e => setComment(e.target.value)}
+                     className='text-black w-full rounded-sm bg-gray-400 border p-2 text-xs outline-none placeholder:text-gray-700'
+                  />
+                  <button
+                     type='submit'
+                     onClick={handleSubmit}
+                     className='flex justify-center items-center bg-gray-600 text-xs text-white rounded-sm py-2 px-4'
+                  >
+                     Отправить
+                  </button>
+               </form>
+               {comments?.map(comment => (
+                  <CommentItem key={comment._id} cmt={comment} />
+               ))}
+            </div>
          </div>
       </div>
    )

@@ -8,7 +8,7 @@
    @apply w-2/3;
 }
 .comment_1 {
-   @apply w-1/3;
+   @apply w-1/3 p-8 bg-gray-700 flex flex-col gap-2 rounded-sm;
 }
 .post {
    @apply flex flex-col basis-1/4 flex-grow;

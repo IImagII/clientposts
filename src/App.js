@@ -12,6 +12,7 @@ import { Route, Routes } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { getMe } from './redux/features/auth/authSlice'
+import { EditPostPage } from './pages/EditPostPage'
 
 function App() {
    const dispatch = useDispatch()
@@ -26,6 +27,7 @@ function App() {
             <Route path='/' element={<MainPage />} />
             <Route path='posts' element={<PostsPage />} />
             <Route path=':id' element={<PostPage />} />
+            <Route path=':id/edit' element={<EditPostPage />} />
             <Route path='new' element={<AddPostPages />} />
             <Route path='login' element={<LoginPage />} />
             <Route path='register' element={<RegisterPage />} />

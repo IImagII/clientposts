@@ -38,13 +38,10 @@ export const loginUser = createAsyncThunk(
    async ({ username, password }) => {
       try {
          //внимание мы тут импортируем не просто axios а уже модифицированную нами его версию свмотри выше
-         const { data } = await axios.post(
-            'http://server-posts-full-stack-production.up.railway.app/api/auth/login',
-            {
-               username,
-               password,
-            }
-         )
+         const { data } = await axios.post('/auth/login', {
+            username,
+            password,
+         })
          //делаем проверку если есть токен то мы его записываем в localStorage
          if (data.token) {
             window.localStorage.setItem('token', data.token)

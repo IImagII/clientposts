@@ -72,7 +72,7 @@ export const EditPostPage = () => {
             {/* сначало отображаем старую картинку  */}
             {oldImage && (
                <img
-                  src={`http://localhost:3002/${oldImage}`}
+                  src={`https://server-posts-full-stack-production.up.railway.app/${oldImage}`}
                   alt={oldImage.name}
                />
             )}
